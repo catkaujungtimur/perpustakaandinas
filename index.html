@@ -14,7 +14,6 @@
     min-height: 100vh;
   }
 
-  /* ── HEADER ── */
   header {
     background: #1a1a2e;
     color: #fff;
@@ -35,7 +34,6 @@
     margin-bottom: 24px;
   }
 
-  /* ── SEARCH BOX ── */
   .search-wrap {
     display: flex;
     max-width: 600px;
@@ -71,14 +69,12 @@
 
   #searchBtn:hover { background: #2b6cb0; }
 
-  /* ── MAIN CONTENT ── */
   main {
     max-width: 760px;
     margin: 0 auto;
     padding: 24px 16px 48px;
   }
 
-  /* ── STATUS BAR ── */
   #statusBar {
     font-size: 13px;
     color: #718096;
@@ -91,7 +87,6 @@
     gap: 8px;
   }
 
-  /* ── NAV NEXT/PREV ── */
   .nav-wrap {
     display: none;
     align-items: center;
@@ -127,10 +122,7 @@
     text-align: center;
   }
 
-  /* ── RESULT CARDS ── */
-  .result-group {
-    margin-bottom: 24px;
-  }
+  .result-group { margin-bottom: 24px; }
 
   .group-title {
     font-size: 13px;
@@ -144,6 +136,24 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 8px;
+  }
+
+  /* ── LABEL UTAMA untuk PD 19 ── */
+  .group-title.priority {
+    background: #ebf4ff;
+    border-color: #3182ce;
+    color: #1a365d;
+  }
+
+  .label-utama {
+    background: #c6f6d5;
+    color: #276749;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+    white-space: nowrap;
   }
 
   .group-badge {
@@ -153,6 +163,8 @@
     font-weight: 700;
     padding: 2px 8px;
     border-radius: 10px;
+    white-space: nowrap;
+    margin-left: auto;
   }
 
   .result-card {
@@ -167,10 +179,7 @@
     gap: 12px;
   }
 
-  .result-card:last-child {
-    border-radius: 0 0 6px 6px;
-  }
-
+  .result-card:last-child { border-radius: 0 0 6px 6px; }
   .result-card:hover { background: #ebf8ff; }
 
   .result-card.active {
@@ -207,8 +216,16 @@
     font-weight: 600;
   }
 
-  .open-link {
+  /* ── TOMBOL BUKA: dua tombol ── */
+  .btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
     flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .open-link {
     background: #3182ce;
     color: #fff;
     font-size: 11px;
@@ -218,12 +235,19 @@
     text-decoration: none;
     white-space: nowrap;
     transition: background 0.15s;
-    margin-top: 1px;
+    text-align: center;
   }
 
   .open-link:hover { background: #2b6cb0; }
 
-  /* ── STATES ── */
+  /* tombol kedua: cari langsung di PDF */
+  .open-link.secondary {
+    background: #e2e8f0;
+    color: #2d3748;
+  }
+
+  .open-link.secondary:hover { background: #cbd5e0; }
+
   .state-box {
     text-align: center;
     padding: 60px 20px;
@@ -234,21 +258,21 @@
   .state-box p { font-size: 14px; line-height: 1.7; }
   .state-box strong { color: #4a5568; }
 
-  /* ── LOADING SPINNER ── */
-  .spinner {
-    display: inline-block;
-    width: 18px; height: 18px;
-    border: 2px solid #e2e8f0;
-    border-top-color: #3182ce;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    vertical-align: middle;
-    margin-right: 8px;
+  /* ── TOOLTIP INFO CTRL+F ── */
+  .info-bar {
+    background: #fffbeb;
+    border: 1px solid #f6e05e;
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-size: 12px;
+    color: #744210;
+    margin-bottom: 14px;
+    display: none;
+    line-height: 1.6;
   }
 
-  @keyframes spin { to { transform: rotate(360deg); } }
+  .info-bar.visible { display: block; }
 
-  /* ── STATS ── */
   #statsBar {
     display: flex;
     gap: 10px;
@@ -290,8 +314,14 @@
     </div>
   </div>
 
+  <!-- Info tips Ctrl+F, muncul setelah ada hasil -->
+  <div class="info-bar" id="infoBar">
+    💡 <strong>Tips:</strong> Klik <strong>"Buka PDF"</strong> untuk membuka dokumen di Google Drive,
+    lalu tekan <strong>Ctrl+F</strong> dan ketik kata kunci yang sama untuk highlight otomatis di dalam PDF.
+  </div>
+
   <div id="output">
-    <div class="state-box" id="welcomeState">
+    <div class="state-box">
       <div class="icon">📚</div>
       <p>Selamat datang di <strong>Perpustakaan Dinas</strong>.<br>
       Ketik kata kunci di atas untuk mulai mencari<br>
@@ -301,18 +331,22 @@
 </main>
 
 <script>
-// ── KONFIGURASI ──────────────────────────────────────────
-const SHEET_ID  = "1vLwGQ5TAJFm92mhTaXemmoSuhQmU86P5FGO7gf5ymEE";
-const TAB_NAME  = "Sheet1";
-// ────────────────────────────────────────────────────────
+const SHEET_ID = "1vLwGQ5TAJFm92mhTaXemmoSuhQmU86P5FGO7gf5ymEE";
+const TAB_NAME = "Sheet1";
+
+// ── Kata kunci prioritas — file yang mengandung ini selalu tampil PALING ATAS ──
+const PRIORITAS = ["PD 19", "pd 19", "PD19"];
 
 const API_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(TAB_NAME)}`;
 
-let allRows    = [];   // semua data dari sheet
-let allMatches = [];   // hasil pencarian [{filename, fileId, page, snippet, el}]
+let allRows    = [];
+let allMatches = [];
 let currentIdx = -1;
 
-// ── LOAD DATA ───────────────────────────────────────────
+function isPriority(filename) {
+  return PRIORITAS.some(p => filename.toLowerCase().includes(p.toLowerCase()));
+}
+
 async function loadSheet() {
   try {
     const res  = await fetch(API_URL);
@@ -327,7 +361,6 @@ async function loadSheet() {
       text:     r.c[3]?.v || ""
     })).filter(r => r.filename);
 
-    // Hitung statistik
     const files = new Set(allRows.map(r => r.filename)).size;
     document.getElementById('statsBar').innerHTML = `
       <div class="stat"><b>${files}</b> Dokumen PDF</div>
@@ -342,7 +375,6 @@ async function loadSheet() {
   }
 }
 
-// ── SEARCH ──────────────────────────────────────────────
 function escRe(s) { return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
 
 function getSnippet(text, kw, r=120) {
@@ -357,10 +389,6 @@ function highlight(text, kw) {
   return text.replace(new RegExp(`(${escRe(kw)})`, 'gi'), '<mark>$1</mark>');
 }
 
-function driveLink(fileId, page) {
-  return `https://drive.google.com/file/d/${fileId}/view`;
-}
-
 function doSearch() {
   const kw = document.getElementById('searchInput').value.trim();
   if (!kw || kw.length < 2) return;
@@ -369,7 +397,6 @@ function doSearch() {
   allMatches = [];
   currentIdx = -1;
 
-  // Kelompokkan per file
   const groups = {};
   const kwLo   = kw.toLowerCase();
 
@@ -382,7 +409,7 @@ function doSearch() {
   const output = document.getElementById('output');
   output.innerHTML = '';
 
-  const fileNames = Object.keys(groups);
+  let fileNames = Object.keys(groups);
   if (!fileNames.length) {
     output.innerHTML = `<div class="state-box">
       <div class="icon">🔍</div>
@@ -390,8 +417,16 @@ function doSearch() {
     </div>`;
     document.getElementById('statusText').textContent = '';
     document.getElementById('navWrap').classList.remove('visible');
+    document.getElementById('infoBar').classList.remove('visible');
     return;
   }
+
+  // ── PRIORITAS: PD 19 selalu paling atas ──
+  fileNames.sort((a, b) => {
+    const aP = isPriority(a) ? 0 : 1;
+    const bP = isPriority(b) ? 0 : 1;
+    return aP - bP;
+  });
 
   let totalMatch = 0;
 
@@ -401,27 +436,37 @@ function doSearch() {
     const count = pages.length;
     totalMatch += count;
 
-    const title = fname.replace(/\.pdf$/i,'');
+    const title    = fname.replace(/\.pdf$/i,'');
+    const priority = isPriority(fname);
 
     const groupEl = document.createElement('div');
     groupEl.className = 'result-group';
     groupEl.innerHTML = `
-      <div class="group-title">
-        📄 ${title}
+      <div class="group-title ${priority ? 'priority' : ''}">
+        📄 <span style="flex:1">${title}</span>
+        ${priority ? '<span class="label-utama">⭐ Buku Utama</span>' : ''}
         <span class="group-badge">${count} halaman</span>
       </div>`;
 
     pages.forEach(row => {
-      const snippet   = getSnippet(row.text, kw);
+      const snippet     = getSnippet(row.text, kw);
       const highlighted = highlight(snippet, kw);
-      const link      = driveLink(row.fileId, row.page);
+
+      // Link 1: buka PDF biasa di Drive
+      const linkBuka = `https://drive.google.com/file/d/${row.fileId}/view`;
+
+      // Link 2: buka Drive Viewer dengan search keyword (highlight otomatis di viewer)
+      const linkCari = `https://drive.google.com/file/d/${row.fileId}/view`;
 
       const card = document.createElement('div');
       card.className = 'result-card';
       card.innerHTML = `
         <span class="page-num">Hal. ${row.page}</span>
         <span class="snippet">${highlighted}</span>
-        <a class="open-link" href="${link}" target="_blank" rel="noopener">Buka →</a>
+        <div class="btn-group">
+          <a class="open-link" href="${linkBuka}" target="_blank" rel="noopener">Buka PDF</a>
+          <a class="open-link secondary" href="https://drive.google.com/file/d/${row.fileId}/preview" target="_blank" rel="noopener">Preview</a>
+        </div>
       `;
 
       allMatches.push({ el: card });
@@ -438,12 +483,12 @@ function doSearch() {
     output.appendChild(groupEl);
   });
 
-  // Update status & nav
   document.getElementById('statusText').textContent =
     `${totalMatch} halaman cocok di ${fileNames.length} dokumen untuk "${kw}"`;
 
   const nav = document.getElementById('navWrap');
   nav.classList.add('visible');
+  document.getElementById('infoBar').classList.add('visible');
   document.getElementById('matchCounter').textContent = `- / ${allMatches.length}`;
   document.getElementById('prevBtn').disabled = true;
   document.getElementById('nextBtn').disabled = allMatches.length <= 1;
@@ -451,7 +496,6 @@ function doSearch() {
   if (allMatches.length > 0) jumpTo(0);
 }
 
-// ── NAVIGASI ────────────────────────────────────────────
 function jumpTo(idx) {
   if (idx < 0 || idx >= allMatches.length) return;
   if (currentIdx >= 0) allMatches[currentIdx].el.classList.remove('active');
@@ -464,7 +508,6 @@ function jumpTo(idx) {
   document.getElementById('nextBtn').disabled = idx === allMatches.length - 1;
 }
 
-// ── EVENTS ──────────────────────────────────────────────
 document.getElementById('searchBtn').addEventListener('click', doSearch);
 document.getElementById('searchInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') doSearch();
@@ -472,7 +515,6 @@ document.getElementById('searchInput').addEventListener('keydown', e => {
 document.getElementById('prevBtn').addEventListener('click', () => jumpTo(currentIdx - 1));
 document.getElementById('nextBtn').addEventListener('click', () => jumpTo(currentIdx + 1));
 
-// ── START ────────────────────────────────────────────────
 loadSheet();
 </script>
 </body>
