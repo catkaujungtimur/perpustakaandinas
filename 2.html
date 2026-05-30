@@ -135,11 +135,9 @@
     border-radius: 6px 6px 0 0;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 8px;
   }
 
-  /* ── LABEL UTAMA untuk PD 19 ── */
   .group-title.priority {
     background: #ebf4ff;
     border-color: #3182ce;
@@ -172,7 +170,6 @@
     border: 1px solid #e2e8f0;
     border-top: none;
     padding: 12px 14px;
-    cursor: pointer;
     transition: background 0.1s;
     display: flex;
     align-items: flex-start;
@@ -206,6 +203,7 @@
     color: #4a5568;
     line-height: 1.6;
     flex: 1;
+    cursor: pointer;
   }
 
   mark {
@@ -216,16 +214,16 @@
     font-weight: 600;
   }
 
-  /* ── TOMBOL BUKA: dua tombol ── */
+  /* ── DUA TOMBOL ── */
   .btn-group {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 5px;
     flex-shrink: 0;
     margin-top: 1px;
   }
 
-  .open-link {
+  .btn-viewer {
     background: #3182ce;
     color: #fff;
     font-size: 11px;
@@ -234,19 +232,30 @@
     border-radius: 4px;
     text-decoration: none;
     white-space: nowrap;
-    transition: background 0.15s;
     text-align: center;
+    cursor: pointer;
+    border: none;
+    transition: background 0.15s;
   }
 
-  .open-link:hover { background: #2b6cb0; }
+  .btn-viewer:hover { background: #2b6cb0; }
 
-  /* tombol kedua: cari langsung di PDF */
-  .open-link.secondary {
-    background: #e2e8f0;
-    color: #2d3748;
+  .btn-drive {
+    background: #edf2f7;
+    color: #4a5568;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    white-space: nowrap;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+    transition: background 0.15s;
   }
 
-  .open-link.secondary:hover { background: #cbd5e0; }
+  .btn-drive:hover { background: #e2e8f0; }
 
   .state-box {
     text-align: center;
@@ -257,21 +266,6 @@
   .state-box .icon { font-size: 48px; margin-bottom: 16px; }
   .state-box p { font-size: 14px; line-height: 1.7; }
   .state-box strong { color: #4a5568; }
-
-  /* ── TOOLTIP INFO CTRL+F ── */
-  .info-bar {
-    background: #fffbeb;
-    border: 1px solid #f6e05e;
-    border-radius: 6px;
-    padding: 8px 14px;
-    font-size: 12px;
-    color: #744210;
-    margin-bottom: 14px;
-    display: none;
-    line-height: 1.6;
-  }
-
-  .info-bar.visible { display: block; }
 
   #statsBar {
     display: flex;
@@ -314,12 +308,6 @@
     </div>
   </div>
 
-  <!-- Info tips Ctrl+F, muncul setelah ada hasil -->
-  <div class="info-bar" id="infoBar">
-    💡 <strong>Tips:</strong> Klik <strong>"Buka PDF"</strong> untuk membuka dokumen di Google Drive,
-    lalu tekan <strong>Ctrl+F</strong> dan ketik kata kunci yang sama untuk highlight otomatis di dalam PDF.
-  </div>
-
   <div id="output">
     <div class="state-box">
       <div class="icon">📚</div>
@@ -331,10 +319,8 @@
 </main>
 
 <script>
-const SHEET_ID = "1vLwGQ5TAJFm92mhTaXemmoSuhQmU86P5FGO7gf5ymEE";
-const TAB_NAME = "Sheet1";
-
-// ── Kata kunci prioritas — file yang mengandung ini selalu tampil PALING ATAS ──
+const SHEET_ID  = "1vLwGQ5TAJFm92mhTaXemmoSuhQmU86P5FGO7gf5ymEE";
+const TAB_NAME  = "Sheet1";
 const PRIORITAS = ["PD 19", "pd 19", "PD19"];
 
 const API_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(TAB_NAME)}`;
@@ -346,6 +332,18 @@ let currentIdx = -1;
 function isPriority(filename) {
   return PRIORITAS.some(p => filename.toLowerCase().includes(p.toLowerCase()));
 }
+
+// ── Auto-search jika ada ?q= di URL (kembali dari viewer) ──
+window.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const q = urlParams.get('q');
+  if (q) {
+    document.getElementById('searchInput').value = q;
+    loadSheet().then(() => doSearch());
+  } else {
+    loadSheet();
+  }
+});
 
 async function loadSheet() {
   try {
@@ -389,6 +387,10 @@ function highlight(text, kw) {
   return text.replace(new RegExp(`(${escRe(kw)})`, 'gi'), '<mark>$1</mark>');
 }
 
+function viewerUrl(fileId, page, title, kw) {
+  return `viewer.html?id=${fileId}&page=${page}&title=${encodeURIComponent(title)}&kw=${encodeURIComponent(kw)}&backKw=${encodeURIComponent(kw)}`;
+}
+
 function doSearch() {
   const kw = document.getElementById('searchInput').value.trim();
   if (!kw || kw.length < 2) return;
@@ -417,25 +419,21 @@ function doSearch() {
     </div>`;
     document.getElementById('statusText').textContent = '';
     document.getElementById('navWrap').classList.remove('visible');
-    document.getElementById('infoBar').classList.remove('visible');
     return;
   }
 
-  // ── PRIORITAS: PD 19 selalu paling atas ──
+  // PD 19 selalu paling atas
   fileNames.sort((a, b) => {
-    const aP = isPriority(a) ? 0 : 1;
-    const bP = isPriority(b) ? 0 : 1;
-    return aP - bP;
+    return (isPriority(a) ? 0 : 1) - (isPriority(b) ? 0 : 1);
   });
 
   let totalMatch = 0;
 
   fileNames.forEach(fname => {
-    const grp   = groups[fname];
-    const pages = grp.pages;
-    const count = pages.length;
-    totalMatch += count;
-
+    const grp      = groups[fname];
+    const pages    = grp.pages;
+    const count    = pages.length;
+    totalMatch    += count;
     const title    = fname.replace(/\.pdf$/i,'');
     const priority = isPriority(fname);
 
@@ -451,12 +449,8 @@ function doSearch() {
     pages.forEach(row => {
       const snippet     = getSnippet(row.text, kw);
       const highlighted = highlight(snippet, kw);
-
-      // Link 1: buka PDF biasa di Drive
-      const linkBuka = `https://drive.google.com/file/d/${row.fileId}/view`;
-
-      // Link 2: buka Drive Viewer dengan search keyword (highlight otomatis di viewer)
-      const linkCari = `https://drive.google.com/file/d/${row.fileId}/view`;
+      const vUrl        = viewerUrl(row.fileId, row.page, title, kw);
+      const dUrl        = `https://drive.google.com/file/d/${row.fileId}/view`;
 
       const card = document.createElement('div');
       card.className = 'result-card';
@@ -464,15 +458,14 @@ function doSearch() {
         <span class="page-num">Hal. ${row.page}</span>
         <span class="snippet">${highlighted}</span>
         <div class="btn-group">
-          <a class="open-link" href="${linkBuka}" target="_blank" rel="noopener">Buka PDF</a>
-          <a class="open-link secondary" href="https://drive.google.com/file/d/${row.fileId}/preview" target="_blank" rel="noopener">Preview</a>
+          <a class="btn-viewer" href="${vUrl}">📖 Buka Viewer</a>
+          <a class="btn-drive" href="${dUrl}" target="_blank" rel="noopener">↗ Google Drive</a>
         </div>
       `;
 
       allMatches.push({ el: card });
 
-      card.addEventListener('click', e => {
-        if (e.target.classList.contains('open-link')) return;
+      card.querySelector('.snippet').addEventListener('click', () => {
         const i = allMatches.findIndex(m => m.el === card);
         if (i >= 0) jumpTo(i);
       });
@@ -488,7 +481,6 @@ function doSearch() {
 
   const nav = document.getElementById('navWrap');
   nav.classList.add('visible');
-  document.getElementById('infoBar').classList.add('visible');
   document.getElementById('matchCounter').textContent = `- / ${allMatches.length}`;
   document.getElementById('prevBtn').disabled = true;
   document.getElementById('nextBtn').disabled = allMatches.length <= 1;
@@ -514,8 +506,6 @@ document.getElementById('searchInput').addEventListener('keydown', e => {
 });
 document.getElementById('prevBtn').addEventListener('click', () => jumpTo(currentIdx - 1));
 document.getElementById('nextBtn').addEventListener('click', () => jumpTo(currentIdx + 1));
-
-loadSheet();
 </script>
 </body>
 </html>
