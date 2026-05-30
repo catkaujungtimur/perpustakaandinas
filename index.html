@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perpustakaan PD OCR — Pencarian</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f5f7fa;
+    color: #1a1a2e;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: #1a1a2e;
+    color: #fff;
+    padding: 32px 20px 28px;
+    text-align: center;
+  }
+
+  header h1 {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    margin-bottom: 4px;
+  }
+
+  header p {
+    font-size: 13px;
+    color: #a0aec0;
+    margin-bottom: 24px;
+  }
+
+  /* ── SEARCH BOX ── */
+  .search-wrap {
+    display: flex;
+    max-width: 600px;
+    margin: 0 auto;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  }
+
+  #searchInput {
+    flex: 1;
+    padding: 14px 18px;
+    font-size: 15px;
+    border: none;
+    outline: none;
+    background: #fff;
+    color: #1a1a2e;
+  }
+
+  #searchInput::placeholder { color: #a0aec0; }
+
+  #searchBtn {
+    background: #3182ce;
+    border: none;
+    padding: 14px 24px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+
+  #searchBtn:hover { background: #2b6cb0; }
+
+  /* ── MAIN CONTENT ── */
+  main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+  }
+
+  /* ── STATUS BAR ── */
+  #statusBar {
+    font-size: 13px;
+    color: #718096;
+    margin-bottom: 16px;
+    min-height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* ── NAV NEXT/PREV ── */
+  .nav-wrap {
+    display: none;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .nav-wrap.visible { display: flex; }
+
+  .nav-btn {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    color: #2d3748;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .nav-btn:hover:not(:disabled) {
+    border-color: #3182ce;
+    color: #3182ce;
+  }
+
+  .nav-btn:disabled { opacity: 0.35; cursor: default; }
+
+  #matchCounter {
+    font-size: 12px;
+    color: #4a5568;
+    font-weight: 600;
+    min-width: 60px;
+    text-align: center;
+  }
+
+  /* ── RESULT CARDS ── */
+  .result-group {
+    margin-bottom: 24px;
+  }
+
+  .group-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #2d3748;
+    background: #edf2f7;
+    border: 1px solid #e2e8f0;
+    border-bottom: none;
+    padding: 8px 14px;
+    border-radius: 6px 6px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .group-badge {
+    background: #3182ce;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+  }
+
+  .result-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-top: none;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: background 0.1s;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .result-card:last-child {
+    border-radius: 0 0 6px 6px;
+  }
+
+  .result-card:hover { background: #ebf8ff; }
+
+  .result-card.active {
+    background: #ebf8ff;
+    border-left: 3px solid #3182ce;
+    padding-left: 11px;
+  }
+
+  .page-num {
+    flex-shrink: 0;
+    background: #edf2f7;
+    color: #4a5568;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-top: 1px;
+    min-width: 56px;
+    text-align: center;
+  }
+
+  .snippet {
+    font-size: 13px;
+    color: #4a5568;
+    line-height: 1.6;
+    flex: 1;
+  }
+
+  mark {
+    background: #fefcbf;
+    color: #744210;
+    padding: 0 2px;
+    border-radius: 2px;
+    font-weight: 600;
+  }
+
+  .open-link {
+    flex-shrink: 0;
+    background: #3182ce;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.15s;
+    margin-top: 1px;
+  }
+
+  .open-link:hover { background: #2b6cb0; }
+
+  /* ── STATES ── */
+  .state-box {
+    text-align: center;
+    padding: 60px 20px;
+    color: #a0aec0;
+  }
+
+  .state-box .icon { font-size: 48px; margin-bottom: 16px; }
+  .state-box p { font-size: 14px; line-height: 1.7; }
+  .state-box strong { color: #4a5568; }
+
+  /* ── LOADING SPINNER ── */
+  .spinner {
+    display: inline-block;
+    width: 18px; height: 18px;
+    border: 2px solid #e2e8f0;
+    border-top-color: #3182ce;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── STATS ── */
+  #statsBar {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    justify-content: center;
+  }
+
+  .stat {
+    background: #2d3748;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 12px;
+    color: #a0aec0;
+  }
+
+  .stat b { color: #fff; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Perpustakaan PD OCR</h1>
+  <p>Pencarian lintas dokumen — ketik kata kunci, temukan di semua PDF</p>
+  <div class="search-wrap">
+    <input type="text" id="searchInput" placeholder="Ketik kata kunci pencarian..." autocomplete="off" />
+    <button id="searchBtn">Cari</button>
+  </div>
+  <div id="statsBar"></div>
+</header>
+
+<main>
+  <div id="statusBar">
+    <span id="statusText"></span>
+    <div class="nav-wrap" id="navWrap">
+      <button class="nav-btn" id="prevBtn" disabled>← Prev</button>
+      <span id="matchCounter"></span>
+      <button class="nav-btn" id="nextBtn" disabled>Next →</button>
+    </div>
+  </div>
+
+  <div id="output">
+    <div class="state-box" id="welcomeState">
+      <div class="icon">📚</div>
+      <p>Selamat datang di <strong>Perpustakaan PD OCR</strong>.<br>
+      Ketik kata kunci di atas untuk mulai mencari<br>
+      di seluruh dokumen PDF yang tersedia.</p>
+    </div>
+  </div>
+</main>
+
+<script>
+// ── KONFIGURASI ──────────────────────────────────────────
+const SHEET_ID  = "1vLwGQ5TAJFm92mhTaXemmoSuhQmU86P5FGO7gf5ymEE";
+const TAB_NAME  = "Sheet1";
+// ────────────────────────────────────────────────────────
+
+const API_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(TAB_NAME)}`;
+
+let allRows    = [];   // semua data dari sheet
+let allMatches = [];   // hasil pencarian [{filename, fileId, page, snippet, el}]
+let currentIdx = -1;
+
+// ── LOAD DATA ───────────────────────────────────────────
+async function loadSheet() {
+  try {
+    const res  = await fetch(API_URL);
+    const text = await res.text();
+    const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
+    const rows = json.table.rows;
+
+    allRows = rows.slice(1).map(r => ({
+      filename: r.c[0]?.v || "",
+      fileId:   r.c[1]?.v || "",
+      page:     r.c[2]?.v || 0,
+      text:     r.c[3]?.v || ""
+    })).filter(r => r.filename);
+
+    // Hitung statistik
+    const files = new Set(allRows.map(r => r.filename)).size;
+    document.getElementById('statsBar').innerHTML = `
+      <div class="stat"><b>${files}</b> Dokumen PDF</div>
+      <div class="stat"><b>${allRows.length.toLocaleString('id')}</b> Halaman Terindeks</div>
+    `;
+  } catch(e) {
+    document.getElementById('output').innerHTML = `
+      <div class="state-box">
+        <div class="icon">⚠️</div>
+        <p>Gagal memuat data.<br>Pastikan Google Sheet sudah diset <strong>Anyone with the link</strong>.</p>
+      </div>`;
+  }
+}
+
+// ── SEARCH ──────────────────────────────────────────────
+function escRe(s) { return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
+
+function getSnippet(text, kw, r=120) {
+  const lo = text.toLowerCase(), k = kw.toLowerCase();
+  const pos = lo.indexOf(k);
+  if (pos < 0) return text.slice(0, r*2);
+  const s = Math.max(0, pos-r), e = Math.min(text.length, pos+k.length+r);
+  return (s>0?'…':'')+text.slice(s,e)+(e<text.length?'…':'');
+}
+
+function highlight(text, kw) {
+  return text.replace(new RegExp(`(${escRe(kw)})`, 'gi'), '<mark>$1</mark>');
+}
+
+function driveLink(fileId, page) {
+  return `https://drive.google.com/file/d/${fileId}/view`;
+}
+
+function doSearch() {
+  const kw = document.getElementById('searchInput').value.trim();
+  if (!kw || kw.length < 2) return;
+  if (!allRows.length) { alert('Data belum siap, tunggu sebentar.'); return; }
+
+  allMatches = [];
+  currentIdx = -1;
+
+  // Kelompokkan per file
+  const groups = {};
+  const kwLo   = kw.toLowerCase();
+
+  allRows.forEach(row => {
+    if (!row.text.toLowerCase().includes(kwLo)) return;
+    if (!groups[row.filename]) groups[row.filename] = { fileId: row.fileId, pages: [] };
+    groups[row.filename].pages.push(row);
+  });
+
+  const output = document.getElementById('output');
+  output.innerHTML = '';
+
+  const fileNames = Object.keys(groups);
+  if (!fileNames.length) {
+    output.innerHTML = `<div class="state-box">
+      <div class="icon">🔍</div>
+      <p>Tidak ada hasil untuk <strong>"${kw}"</strong>.<br>Coba kata kunci yang berbeda.</p>
+    </div>`;
+    document.getElementById('statusText').textContent = '';
+    document.getElementById('navWrap').classList.remove('visible');
+    return;
+  }
+
+  let totalMatch = 0;
+
+  fileNames.forEach(fname => {
+    const grp   = groups[fname];
+    const pages = grp.pages;
+    const count = pages.length;
+    totalMatch += count;
+
+    const title = fname.replace(/\.pdf$/i,'');
+
+    const groupEl = document.createElement('div');
+    groupEl.className = 'result-group';
+    groupEl.innerHTML = `
+      <div class="group-title">
+        📄 ${title}
+        <span class="group-badge">${count} halaman</span>
+      </div>`;
+
+    pages.forEach(row => {
+      const snippet   = getSnippet(row.text, kw);
+      const highlighted = highlight(snippet, kw);
+      const link      = driveLink(row.fileId, row.page);
+
+      const card = document.createElement('div');
+      card.className = 'result-card';
+      card.innerHTML = `
+        <span class="page-num">Hal. ${row.page}</span>
+        <span class="snippet">${highlighted}</span>
+        <a class="open-link" href="${link}" target="_blank" rel="noopener">Buka →</a>
+      `;
+
+      allMatches.push({ el: card });
+
+      card.addEventListener('click', e => {
+        if (e.target.classList.contains('open-link')) return;
+        const i = allMatches.findIndex(m => m.el === card);
+        if (i >= 0) jumpTo(i);
+      });
+
+      groupEl.appendChild(card);
+    });
+
+    output.appendChild(groupEl);
+  });
+
+  // Update status & nav
+  document.getElementById('statusText').textContent =
+    `${totalMatch} halaman cocok di ${fileNames.length} dokumen untuk "${kw}"`;
+
+  const nav = document.getElementById('navWrap');
+  nav.classList.add('visible');
+  document.getElementById('matchCounter').textContent = `- / ${allMatches.length}`;
+  document.getElementById('prevBtn').disabled = true;
+  document.getElementById('nextBtn').disabled = allMatches.length <= 1;
+
+  if (allMatches.length > 0) jumpTo(0);
+}
+
+// ── NAVIGASI ────────────────────────────────────────────
+function jumpTo(idx) {
+  if (idx < 0 || idx >= allMatches.length) return;
+  if (currentIdx >= 0) allMatches[currentIdx].el.classList.remove('active');
+  currentIdx = idx;
+  const m = allMatches[idx];
+  m.el.classList.add('active');
+  m.el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  document.getElementById('matchCounter').textContent = `${idx+1} / ${allMatches.length}`;
+  document.getElementById('prevBtn').disabled = idx === 0;
+  document.getElementById('nextBtn').disabled = idx === allMatches.length - 1;
+}
+
+// ── EVENTS ──────────────────────────────────────────────
+document.getElementById('searchBtn').addEventListener('click', doSearch);
+document.getElementById('searchInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doSearch();
+});
+document.getElementById('prevBtn').addEventListener('click', () => jumpTo(currentIdx - 1));
+document.getElementById('nextBtn').addEventListener('click', () => jumpTo(currentIdx + 1));
+
+// ── START ────────────────────────────────────────────────
+loadSheet();
+</script>
+</body>
+</html>
