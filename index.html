@@ -201,6 +201,51 @@
   #statsBar { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; justify-content: center; }
   .stat { background: #2d3748; border-radius: 6px; padding: 6px 14px; font-size: 12px; color: #a0aec0; }
   .stat b { color: #fff; }
+
+  #loadingIndicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+    font-size: 12px;
+    color: #a0aec0;
+  }
+
+  .spinner {
+    width: 14px; height: 14px;
+    border: 2px solid #4a5568;
+    border-top-color: #a0aec0;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  #readyBadge {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 14px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #68d391;
+    letter-spacing: 0.05em;
+  }
+
+  #readyBadge .ready-dot {
+    width: 8px; height: 8px;
+    background: #68d391;
+    border-radius: 50%;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
 </style>
 </head>
 <body>
@@ -213,6 +258,14 @@
     <button id="searchBtn">Cari</button>
   </div>
   <div id="statsBar"></div>
+  <div id="loadingIndicator">
+    <div class="spinner"></div>
+    <span>Memuat data perpustakaan...</span>
+  </div>
+  <div id="readyBadge">
+    <div class="ready-dot"></div>
+    ✅ Ready!
+  </div>
 </header>
 
 <main>
@@ -288,6 +341,11 @@ async function loadSheet() {
       <div class="stat"><b>${files}</b> Dokumen PDF</div>
       <div class="stat"><b>${allRows.length.toLocaleString('id')}</b> Halaman Terindeks</div>
     `;
+    document.getElementById('loadingIndicator').style.display = 'none';
+    const rb = document.getElementById('readyBadge');
+    rb.style.display = 'flex';
+    setTimeout(() => { rb.style.opacity = '0'; rb.style.transition = 'opacity 1.5s'; }, 3000);
+    setTimeout(() => { rb.style.display = 'none'; }, 4500);
   } catch(e) {
     document.getElementById('output').innerHTML = `
       <div class="state-box">
