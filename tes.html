@@ -202,6 +202,7 @@
   .stat { background: #2d3748; border-radius: 6px; padding: 6px 14px; font-size: 12px; color: #a0aec0; }
   .stat b { color: #fff; }
 
+  /* ── LOADING & READY ── */
   #loadingIndicator {
     display: flex;
     align-items: center;
@@ -280,9 +281,7 @@
 
   <div class="info-bar" id="infoBar">
     💡 <strong>Tips:</strong> Klik <strong>"Preview"</strong> untuk membaca teks penuh halaman tanpa membuka PDF.
-    Ada dokumen penting yang ingin di-input? Kirimkan ke <strong>53595@kai.id</strong>.
-    Klik <strong>"Buka PDF"</strong> hanya untuk developer untuk menghindari hal-hal yang tidak diinginkan.
-    Silahkan minta langsung via email jika dibutuhkan.
+    Klik <strong>"Buka PDF"</strong> untuk membuka dokumen asli di Google Drive.
   </div>
 
   <div id="output">
@@ -481,7 +480,7 @@ function doSearch() {
           <span class="page-num">Hal. ${row.page}</span>
           <span class="snippet">${highlighted}</span>
           <div class="btn-group">
-            <span class="btn-buka-disabled" title="Hubungi developer untuk akses dokumen asli">Buka PDF</span>
+            <a class="btn-buka" href="${linkBuka}" target="_blank" rel="noopener">Buka PDF</a>
             <button class="btn-preview">Preview ▼</button>
           </div>
         </div>
