@@ -227,7 +227,9 @@
 
   <div class="info-bar" id="infoBar">
     💡 <strong>Tips:</strong> Klik <strong>"Preview"</strong> untuk membaca teks penuh halaman tanpa membuka PDF.
-    Klik <strong>"Buka PDF"</strong> untuk membuka dokumen asli di Google Drive.
+    Ada dokumen penting yang ingin di-input? Kirimkan ke <strong>53595@kai.id</strong>.
+    Klik <strong>"Buka PDF"</strong> hanya untuk developer untuk menghindari hal-hal yang tidak diinginkan.
+    Silahkan minta langsung via email jika dibutuhkan.
   </div>
 
   <div id="output">
@@ -421,7 +423,7 @@ function doSearch() {
           <span class="page-num">Hal. ${row.page}</span>
           <span class="snippet">${highlighted}</span>
           <div class="btn-group">
-            <a class="btn-buka" href="${linkBuka}" target="_blank" rel="noopener">Buka PDF</a>
+            <span class="btn-buka-disabled" title="Hubungi developer untuk akses dokumen asli">Buka PDF</span>
             <button class="btn-preview">Preview ▼</button>
           </div>
         </div>
