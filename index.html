@@ -21,18 +21,8 @@
     text-align: center;
   }
 
-  header h1 {
-    font-size: 22px;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    margin-bottom: 4px;
-  }
-
-  header p {
-    font-size: 13px;
-    color: #a0aec0;
-    margin-bottom: 24px;
-  }
+  header h1 { font-size: 22px; font-weight: 600; letter-spacing: 0.02em; margin-bottom: 4px; }
+  header p { font-size: 13px; color: #a0aec0; margin-bottom: 24px; }
 
   .search-wrap {
     display: flex;
@@ -44,240 +34,172 @@
   }
 
   #searchInput {
-    flex: 1;
-    padding: 14px 18px;
-    font-size: 15px;
-    border: none;
-    outline: none;
-    background: #fff;
-    color: #1a1a2e;
+    flex: 1; padding: 14px 18px; font-size: 15px;
+    border: none; outline: none; background: #fff; color: #1a1a2e;
   }
-
   #searchInput::placeholder { color: #a0aec0; }
 
   #searchBtn {
-    background: #3182ce;
-    border: none;
-    padding: 14px 24px;
-    color: #fff;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: background 0.2s;
+    background: #3182ce; border: none; padding: 14px 24px;
+    color: #fff; font-size: 14px; font-weight: 600;
+    cursor: pointer; white-space: nowrap; transition: background 0.2s;
   }
-
   #searchBtn:hover { background: #2b6cb0; }
 
-  main {
-    max-width: 760px;
-    margin: 0 auto;
-    padding: 24px 16px 48px;
-  }
+  main { max-width: 760px; margin: 0 auto; padding: 24px 16px 48px; }
 
   #statusBar {
-    font-size: 13px;
-    color: #718096;
-    margin-bottom: 16px;
-    min-height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 8px;
+    font-size: 13px; color: #718096; margin-bottom: 16px;
+    min-height: 20px; display: flex; align-items: center;
+    justify-content: space-between; flex-wrap: wrap; gap: 8px;
   }
 
-  .nav-wrap {
-    display: none;
-    align-items: center;
-    gap: 8px;
-  }
-
+  .nav-wrap { display: none; align-items: center; gap: 8px; }
   .nav-wrap.visible { display: flex; }
 
   .nav-btn {
-    background: #fff;
-    border: 1px solid #e2e8f0;
-    color: #2d3748;
-    padding: 4px 12px;
-    font-size: 12px;
-    font-weight: 600;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.15s;
+    background: #fff; border: 1px solid #e2e8f0; color: #2d3748;
+    padding: 4px 12px; font-size: 12px; font-weight: 600;
+    border-radius: 5px; cursor: pointer; transition: all 0.15s;
   }
-
-  .nav-btn:hover:not(:disabled) {
-    border-color: #3182ce;
-    color: #3182ce;
-  }
-
+  .nav-btn:hover:not(:disabled) { border-color: #3182ce; color: #3182ce; }
   .nav-btn:disabled { opacity: 0.35; cursor: default; }
 
-  #matchCounter {
-    font-size: 12px;
-    color: #4a5568;
-    font-weight: 600;
-    min-width: 60px;
-    text-align: center;
-  }
+  #matchCounter { font-size: 12px; color: #4a5568; font-weight: 600; min-width: 60px; text-align: center; }
 
+  /* ── RESULT GROUP ── */
   .result-group { margin-bottom: 24px; }
 
   .group-title {
-    font-size: 13px;
-    font-weight: 700;
-    color: #2d3748;
-    background: #edf2f7;
-    border: 1px solid #e2e8f0;
-    border-bottom: none;
-    padding: 8px 14px;
+    font-size: 13px; font-weight: 700;
+    border-bottom: none; padding: 9px 14px;
     border-radius: 6px 6px 0 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-  }
-
-  /* ── LABEL UTAMA untuk PD 19 ── */
-  .group-title.priority {
-    background: #ebf4ff;
-    border-color: #3182ce;
-    color: #1a365d;
+    display: flex; align-items: center; gap: 8px;
+    color: #fff;
   }
 
   .label-utama {
-    background: #c6f6d5;
-    color: #276749;
-    font-size: 10px;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 10px;
-    white-space: nowrap;
+    background: rgba(255,255,255,0.25);
+    color: #fff;
+    font-size: 10px; font-weight: 700;
+    padding: 2px 8px; border-radius: 10px; white-space: nowrap;
   }
 
   .group-badge {
-    background: #3182ce;
-    color: #fff;
-    font-size: 10px;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 10px;
-    white-space: nowrap;
-    margin-left: auto;
+    background: rgba(0,0,0,0.2);
+    color: #fff; font-size: 10px; font-weight: 700;
+    padding: 2px 8px; border-radius: 10px;
+    white-space: nowrap; margin-left: auto;
   }
 
+  /* ── RESULT CARD ── */
   .result-card {
     background: #fff;
     border: 1px solid #e2e8f0;
     border-top: none;
     padding: 12px 14px;
-    cursor: pointer;
     transition: background 0.1s;
     display: flex;
     align-items: flex-start;
     gap: 12px;
+    flex-wrap: wrap;
   }
-
   .result-card:last-child { border-radius: 0 0 6px 6px; }
-  .result-card:hover { background: #ebf8ff; }
+  .result-card:hover { background: #f7faff; }
+  .result-card.active { background: #ebf8ff; border-left: 3px solid #3182ce; padding-left: 11px; }
 
-  .result-card.active {
-    background: #ebf8ff;
-    border-left: 3px solid #3182ce;
-    padding-left: 11px;
+  .card-main {
+    display: flex; align-items: flex-start; gap: 12px;
+    width: 100%;
   }
 
   .page-num {
-    flex-shrink: 0;
-    background: #edf2f7;
-    color: #4a5568;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 3px 8px;
-    border-radius: 4px;
-    margin-top: 1px;
-    min-width: 56px;
-    text-align: center;
+    flex-shrink: 0; background: #edf2f7; color: #4a5568;
+    font-size: 11px; font-weight: 700; padding: 3px 8px;
+    border-radius: 4px; margin-top: 1px; min-width: 56px; text-align: center;
   }
 
-  .snippet {
-    font-size: 13px;
-    color: #4a5568;
-    line-height: 1.6;
-    flex: 1;
-  }
+  .snippet { font-size: 13px; color: #4a5568; line-height: 1.6; flex: 1; }
 
   mark {
-    background: #fefcbf;
-    color: #744210;
-    padding: 0 2px;
-    border-radius: 2px;
-    font-weight: 600;
+    background: #fefcbf; color: #744210;
+    padding: 0 2px; border-radius: 2px; font-weight: 600;
   }
 
-  /* ── TOMBOL BUKA: dua tombol ── */
-  .btn-group {
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
+  /* ── TOMBOL ── */
+  .btn-group { display: flex; flex-direction: column; gap: 5px; flex-shrink: 0; margin-top: 1px; }
 
-  .open-link {
-    background: #3182ce;
-    color: #fff;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 5px 10px;
-    border-radius: 4px;
-    text-decoration: none;
-    white-space: nowrap;
+  .btn-buka {
+    background: #3182ce; color: #fff;
+    font-size: 11px; font-weight: 700; padding: 5px 10px;
+    border-radius: 4px; text-decoration: none;
+    white-space: nowrap; text-align: center;
     transition: background 0.15s;
-    text-align: center;
+  }
+  .btn-buka:hover { background: #2b6cb0; }
+
+  .btn-preview {
+    background: #edf2f7; color: #4a5568;
+    font-size: 11px; font-weight: 700; padding: 5px 10px;
+    border-radius: 4px; border: none; cursor: pointer;
+    white-space: nowrap; text-align: center;
+    transition: background 0.15s;
+  }
+  .btn-preview:hover { background: #e2e8f0; }
+  .btn-preview.open { background: #fefcbf; color: #744210; }
+
+  /* ── PREVIEW EXPAND ── */
+  .preview-expand {
+    display: none;
+    width: 100%;
+    margin-top: 10px;
+    border-top: 1px dashed #e2e8f0;
+    padding-top: 10px;
+  }
+  .preview-expand.visible { display: block; }
+
+  .preview-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 8px; gap: 8px;
   }
 
-  .open-link:hover { background: #2b6cb0; }
+  .prev-page-btn, .next-page-btn {
+    background: #edf2f7; border: 1px solid #e2e8f0;
+    color: #4a5568; font-size: 11px; font-weight: 700;
+    padding: 4px 10px; border-radius: 4px; cursor: pointer;
+    transition: all 0.15s; white-space: nowrap;
+  }
+  .prev-page-btn:hover:not(:disabled), .next-page-btn:hover:not(:disabled) {
+    border-color: #3182ce; color: #3182ce;
+  }
+  .prev-page-btn:disabled, .next-page-btn:disabled { opacity: 0.3; cursor: default; }
 
-  .state-box {
-    text-align: center;
-    padding: 60px 20px;
-    color: #a0aec0;
+  .preview-page-info {
+    font-size: 11px; font-weight: 700; color: #718096; text-align: center; flex: 1;
   }
 
+  .preview-text {
+    font-size: 13px; color: #2d3748; line-height: 1.8;
+    background: #f7faff; border-radius: 4px;
+    padding: 12px 14px; max-height: 300px; overflow-y: auto;
+    white-space: pre-wrap; word-break: break-word;
+  }
+
+  /* ── STATES ── */
+  .state-box { text-align: center; padding: 60px 20px; color: #a0aec0; }
   .state-box .icon { font-size: 48px; margin-bottom: 16px; }
   .state-box p { font-size: 14px; line-height: 1.7; }
   .state-box strong { color: #4a5568; }
 
-  /* ── TOOLTIP INFO CTRL+F ── */
   .info-bar {
-    background: #fffbeb;
-    border: 1px solid #f6e05e;
-    border-radius: 6px;
-    padding: 8px 14px;
-    font-size: 12px;
-    color: #744210;
-    margin-bottom: 14px;
-    display: none;
-    line-height: 1.6;
+    background: #fffbeb; border: 1px solid #f6e05e;
+    border-radius: 6px; padding: 8px 14px; font-size: 12px;
+    color: #744210; margin-bottom: 14px; display: none; line-height: 1.6;
   }
-
   .info-bar.visible { display: block; }
 
-  #statsBar {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-top: 20px;
-    justify-content: center;
-  }
-
-  .stat {
-    background: #2d3748;
-    border-radius: 6px;
-    padding: 6px 14px;
-    font-size: 12px;
-    color: #a0aec0;
-  }
-
+  #statsBar { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; justify-content: center; }
+  .stat { background: #2d3748; border-radius: 6px; padding: 6px 14px; font-size: 12px; color: #a0aec0; }
   .stat b { color: #fff; }
 </style>
 </head>
@@ -303,10 +225,9 @@
     </div>
   </div>
 
-  <!-- Info tips Ctrl+F, muncul setelah ada hasil -->
   <div class="info-bar" id="infoBar">
-    💡 <strong>Tips:</strong> Klik <strong>"Buka PDF"</strong> untuk membuka dokumen di Google Drive,
-    lalu tekan <strong>Ctrl+F</strong> dan ketik kata kunci yang sama untuk highlight otomatis di dalam PDF.
+    💡 <strong>Tips:</strong> Klik <strong>"Preview"</strong> untuk membaca teks penuh halaman tanpa membuka PDF.
+    Klik <strong>"Buka PDF"</strong> untuk membuka dokumen asli di Google Drive.
   </div>
 
   <div id="output">
@@ -320,11 +241,21 @@
 </main>
 
 <script>
-const SHEET_ID = "1vLwGQ5TAJFm92mhTaXemmoSuhQmU86P5FGO7gf5ymEE";
-const TAB_NAME = "Sheet1";
-
-// ── Kata kunci prioritas — file yang mengandung ini selalu tampil PALING ATAS ──
+const SHEET_ID  = "1vLwGQ5TAJFm92mhTaXemmoSuhQmU86P5FGO7gf5ymEE";
+const TAB_NAME  = "Sheet1";
 const PRIORITAS = ["PD 19", "pd 19", "PD19"];
+
+// ── Palet warna untuk judul buku (otomatis berganti) ──
+const COLORS = [
+  "#2b6cb0", "#276749", "#744210", "#553c9a",
+  "#9b2335", "#2c7a7b", "#744210", "#1a365d",
+  "#22543d", "#702459", "#2a4365", "#285e61",
+  "#3d2c8d", "#7b341e", "#234e52"
+];
+
+function getColor(index) {
+  return COLORS[index % COLORS.length];
+}
 
 const API_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(TAB_NAME)}`;
 
@@ -378,6 +309,50 @@ function highlight(text, kw) {
   return text.replace(new RegExp(`(${escRe(kw)})`, 'gi'), '<mark>$1</mark>');
 }
 
+// ── Ambil teks halaman tertentu dari allRows ──
+function getPageText(filename, pageNum) {
+  const row = allRows.find(r => r.filename === filename && r.page === pageNum);
+  return row ? row.text : null;
+}
+
+function getMaxPage(filename) {
+  const pages = allRows.filter(r => r.filename === filename).map(r => r.page);
+  return pages.length ? Math.max(...pages) : 1;
+}
+
+// ── Render preview expand untuk satu card ──
+function renderPreview(expandEl, filename, pageNum, kw) {
+  const navEl   = expandEl.querySelector('.preview-nav');
+  const textEl  = expandEl.querySelector('.preview-text');
+  const infoEl  = expandEl.querySelector('.preview-page-info');
+  const prevBtn = expandEl.querySelector('.prev-page-btn');
+  const nextBtn = expandEl.querySelector('.next-page-btn');
+
+  let currentPage = pageNum;
+  const maxPage   = getMaxPage(filename);
+
+  function showPage(p) {
+    currentPage = p;
+    const text  = getPageText(filename, p);
+    infoEl.textContent = `Halaman ${p}`;
+    textEl.innerHTML   = text
+      ? highlight(text.replace(/</g,'&lt;').replace(/>/g,'&gt;'), kw)
+      : '<span style="color:#a0aec0">Teks halaman ini tidak tersedia.</span>';
+    prevBtn.disabled = p <= 1;
+    nextBtn.disabled = p >= maxPage;
+    // Scroll ke mark pertama
+    setTimeout(() => {
+      const firstMark = textEl.querySelector('mark');
+      if (firstMark) firstMark.scrollIntoView({ block: 'nearest' });
+    }, 50);
+  }
+
+  prevBtn.onclick = () => showPage(currentPage - 1);
+  nextBtn.onclick = () => showPage(currentPage + 1);
+
+  showPage(pageNum);
+}
+
 function doSearch() {
   const kw = document.getElementById('searchInput').value.trim();
   if (!kw || kw.length < 2) return;
@@ -410,28 +385,25 @@ function doSearch() {
     return;
   }
 
-  // ── PRIORITAS: PD 19 selalu paling atas ──
-  fileNames.sort((a, b) => {
-    const aP = isPriority(a) ? 0 : 1;
-    const bP = isPriority(b) ? 0 : 1;
-    return aP - bP;
-  });
+  // PD 19 selalu paling atas
+  fileNames.sort((a, b) => (isPriority(a) ? 0 : 1) - (isPriority(b) ? 0 : 1));
 
   let totalMatch = 0;
+  let colorIdx   = 0;
 
   fileNames.forEach(fname => {
-    const grp   = groups[fname];
-    const pages = grp.pages;
-    const count = pages.length;
-    totalMatch += count;
-
+    const grp      = groups[fname];
+    const pages    = grp.pages;
+    const count    = pages.length;
+    totalMatch    += count;
     const title    = fname.replace(/\.pdf$/i,'');
     const priority = isPriority(fname);
+    const color    = priority ? '#1a365d' : getColor(colorIdx++);
 
     const groupEl = document.createElement('div');
     groupEl.className = 'result-group';
     groupEl.innerHTML = `
-      <div class="group-title ${priority ? 'priority' : ''}">
+      <div class="group-title" style="background:${color}">
         📄 <span style="flex:1">${title}</span>
         ${priority ? '<span class="label-utama">⭐ Buku Utama</span>' : ''}
         <span class="group-badge">${count} halaman</span>
@@ -440,28 +412,59 @@ function doSearch() {
     pages.forEach(row => {
       const snippet     = getSnippet(row.text, kw);
       const highlighted = highlight(snippet, kw);
-
-      // Link 1: buka PDF biasa di Drive
-      const linkBuka = `https://drive.google.com/file/d/${row.fileId}/view`;
-
-      // Link 2: buka Drive Viewer dengan search keyword (highlight otomatis di viewer)
-      const linkCari = `https://drive.google.com/file/d/${row.fileId}/view`;
+      const linkBuka    = `https://drive.google.com/file/d/${row.fileId}/view`;
 
       const card = document.createElement('div');
       card.className = 'result-card';
       card.innerHTML = `
-        <span class="page-num">Hal. ${row.page}</span>
-        <span class="snippet">${highlighted}</span>
-        <div class="btn-group">
-          <a class="open-link" href="${linkBuka}" target="_blank" rel="noopener">Buka PDF</a>
-          
+        <div class="card-main">
+          <span class="page-num">Hal. ${row.page}</span>
+          <span class="snippet">${highlighted}</span>
+          <div class="btn-group">
+            <a class="btn-buka" href="${linkBuka}" target="_blank" rel="noopener">Buka PDF</a>
+            <button class="btn-preview">Preview ▼</button>
+          </div>
+        </div>
+        <div class="preview-expand">
+          <div class="preview-nav">
+            <button class="prev-page-btn">← Hal. Sebelumnya</button>
+            <span class="preview-page-info"></span>
+            <button class="next-page-btn">Hal. Berikutnya →</button>
+          </div>
+          <div class="preview-text"></div>
         </div>
       `;
+
+      // Tombol preview toggle
+      const previewBtn    = card.querySelector('.btn-preview');
+      const expandEl      = card.querySelector('.preview-expand');
+      let   previewLoaded = false;
+
+      previewBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = expandEl.classList.contains('visible');
+        if (isOpen) {
+          expandEl.classList.remove('visible');
+          previewBtn.textContent = 'Preview ▼';
+          previewBtn.classList.remove('open');
+        } else {
+          expandEl.classList.add('visible');
+          previewBtn.textContent = 'Tutup ▲';
+          previewBtn.classList.add('open');
+          if (!previewLoaded) {
+            renderPreview(expandEl, row.filename, row.page, kw);
+            previewLoaded = true;
+          }
+        }
+      });
 
       allMatches.push({ el: card });
 
       card.addEventListener('click', e => {
-        if (e.target.classList.contains('open-link')) return;
+        if (e.target.classList.contains('btn-buka') ||
+            e.target.classList.contains('btn-preview') ||
+            e.target.classList.contains('prev-page-btn') ||
+            e.target.classList.contains('next-page-btn')) return;
         const i = allMatches.findIndex(m => m.el === card);
         if (i >= 0) jumpTo(i);
       });
