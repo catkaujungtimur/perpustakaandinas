@@ -607,15 +607,14 @@ function doSearch() {
   output.innerHTML = '';
 
   let fileNames = Object.keys(groups);
-  if (!fileNames.length) {
-    // Cek apakah ada di semboyan
-    const kwLo2 = kw.toLowerCase();
-    const hasSemboyan = SEMBOYAN_PD3.some(s =>
-      s.kode.toLowerCase().includes(kwLo2) ||
-      s.nama.toLowerCase().includes(kwLo2) ||
-      s.desc.toLowerCase().includes(kwLo2)
-    );
-    if (!hasSemboyan) {
+  const kwLo2 = kw.toLowerCase();
+  const hasSemboyan = SEMBOYAN_PD3.some(s =>
+    s.kode.toLowerCase().includes(kwLo2) ||
+    s.nama.toLowerCase().includes(kwLo2) ||
+    s.desc.toLowerCase().includes(kwLo2)
+  );
+
+  if (!fileNames.length && !hasSemboyan) {
     output.innerHTML = `<div class="state-box">
       <div class="icon">🔍</div>
       <p>Tidak ada hasil untuk <strong>"${kw}"</strong>.<br>Coba kata kunci yang berbeda.</p>
@@ -624,9 +623,6 @@ function doSearch() {
     document.getElementById('navWrap').classList.remove('visible');
     document.getElementById('infoBar').classList.remove('visible');
     return;
-  }
-
-    }
   }
 
   // PD 19 selalu paling atas
