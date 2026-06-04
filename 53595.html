@@ -250,21 +250,16 @@
 
   /* ── TOMBOL GALERI SEMBOYAN ── */
   .galeri-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 14px;
-    background: #ed8936;
-    color: #fff;
+    background: #2d3748;
+    color: #a0aec0;
     font-size: 12px;
-    font-weight: 700;
-    padding: 7px 18px;
-    border-radius: 20px;
+    font-weight: 400;
+    padding: 6px 14px;
+    border-radius: 6px;
     text-decoration: none;
-    letter-spacing: 0.03em;
-    transition: background 0.2s;
+    transition: all 0.2s;
   }
-  .galeri-btn:hover { background: #dd6b20; }
+  .galeri-btn:hover { background: #4a5568; color: #fff; }
 </style>
 </head>
 <body>
@@ -277,7 +272,6 @@
     <button id="searchBtn">Cari</button>
   </div>
   <div id="statsBar"></div>
-  <a class="galeri-btn" href="galeri-semboyan.html">📋 Galeri Semboyan PD 3</a>
   <div id="loadingIndicator">
     <div class="spinner"></div>
     <span>Memuat data perpustakaan...</span>
@@ -360,6 +354,7 @@ async function loadSheet() {
     document.getElementById('statsBar').innerHTML = `
       <div class="stat"><b>${files}</b> Dokumen PDF</div>
       <div class="stat"><b>${allRows.length.toLocaleString('id')}</b> Halaman Terindeks</div>
+      <a class="galeri-btn" href="galeri-semboyan.html">📋 Galeri Semboyan PD 3</a>
     `;
     document.getElementById('loadingIndicator').style.display = 'none';
     const rb = document.getElementById('readyBadge');
