@@ -606,10 +606,16 @@ function doSearch() {
   const output = document.getElementById('output');
   output.innerHTML = '';
 
-  // Cari di galeri semboyan dulu
-  const semboyanCount = searchSemboyan(kw, output);
   let fileNames = Object.keys(groups);
-  if (!fileNames.length && !semboyanCount) {
+  if (!fileNames.length) {
+    // Cek apakah ada di semboyan
+    const kwLo2 = kw.toLowerCase();
+    const hasSemboyan = SEMBOYAN_PD3.some(s =>
+      s.kode.toLowerCase().includes(kwLo2) ||
+      s.nama.toLowerCase().includes(kwLo2) ||
+      s.desc.toLowerCase().includes(kwLo2)
+    );
+    if (!hasSemboyan) {
     output.innerHTML = `<div class="state-box">
       <div class="icon">🔍</div>
       <p>Tidak ada hasil untuk <strong>"${kw}"</strong>.<br>Coba kata kunci yang berbeda.</p>
@@ -620,9 +626,13 @@ function doSearch() {
     return;
   }
 
+    }
+  }
+
   // PD 19 selalu paling atas
   fileNames.sort((a, b) => (isPriority(a) ? 0 : 1) - (isPriority(b) ? 0 : 1));
 
+  let totalMatch = 0;
   let colorIdx   = 0;
 
   fileNames.forEach(fname => {
@@ -709,8 +719,12 @@ function doSearch() {
     output.appendChild(groupEl);
   });
 
+  // Tambah galeri semboyan di PALING ATAS setelah semua PDF
+  const semboyanCount = searchSemboyan(kw, output);
+  totalMatch += semboyanCount;
+
   document.getElementById('statusText').textContent =
-    `${totalMatch} halaman cocok di ${fileNames.length} dokumen untuk "${kw}"`;
+    `${totalMatch} hasil di ${fileNames.length} dokumen${semboyanCount ? ' + ' + semboyanCount + ' semboyan' : ''} untuk "${kw}"`;
 
   const nav = document.getElementById('navWrap');
   nav.classList.add('visible');
