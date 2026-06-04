@@ -246,6 +246,24 @@
     0%, 100% { opacity: 1; transform: scale(1); }
     50% { opacity: 0.5; transform: scale(0.8); }
   }
+
+  /* ── TOMBOL GALERI SEMBOYAN ── */
+  .galeri-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 14px;
+    background: #ed8936;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 7px 18px;
+    border-radius: 20px;
+    text-decoration: none;
+    letter-spacing: 0.03em;
+    transition: background 0.2s;
+  }
+  .galeri-btn:hover { background: #dd6b20; }
 </style>
 </head>
 <body>
@@ -258,6 +276,7 @@
     <button id="searchBtn">Cari</button>
   </div>
   <div id="statsBar"></div>
+  <a class="galeri-btn" href="galeri-semboyan.html">📋 Galeri Semboyan PD 3</a>
   <div id="loadingIndicator">
     <div class="spinner"></div>
     <span>Memuat data perpustakaan...</span>
