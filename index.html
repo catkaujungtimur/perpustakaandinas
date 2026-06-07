@@ -598,8 +598,12 @@ function doSearch() {
   const kwLo   = kw.toLowerCase();
 
   allRows.forEach(row => {
-    if (!row.text.toLowerCase().includes(kwLo)) return;
+    const matchText     = row.text.toLowerCase().includes(kwLo);
+    const matchFilename = row.filename.toLowerCase().includes(kwLo);
+    if (!matchText && !matchFilename) return;
     if (!groups[row.filename]) groups[row.filename] = { fileId: row.fileId, pages: [] };
+    // Kalau hanya cocok di filename (bukan di teks halaman), tandai khusus
+    if (matchFilename && !matchText) row._titleOnly = true;
     groups[row.filename].pages.push(row);
   });
 
@@ -636,7 +640,7 @@ function doSearch() {
     const pages    = grp.pages;
     const count    = pages.length;
     totalMatch    += count;
-    const title    = fname.replace(/\.pdf$/i,'');
+    const title    = highlight(fname.replace(/\.pdf$/i,''), kw);
     const priority = isPriority(fname);
     const color    = priority ? '#1a365d' : getColor(colorIdx++);
 
@@ -649,9 +653,16 @@ function doSearch() {
         <span class="group-badge">${count} halaman</span>
       </div>`;
 
+    let titleShown = false;
     pages.forEach(row => {
-      const snippet     = getSnippet(row.text, kw);
-      const highlighted = highlight(snippet, kw);
+      // Kalau titleOnly, hanya tampilkan 1 kali per buku
+      if (row._titleOnly) {
+        if (titleShown) return;
+        titleShown = true;
+      }
+      const highlighted = row._titleOnly
+        ? '<em style="color:#a0aec0">🔖 Kata kunci ditemukan pada judul dokumen ini.</em>'
+        : highlight(getSnippet(row.text, kw), kw);
       const linkBuka    = `https://drive.google.com/file/d/${row.fileId}/view`;
 
       const card = document.createElement('div');
