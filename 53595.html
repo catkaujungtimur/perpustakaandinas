@@ -654,7 +654,13 @@ function doSearch() {
         <span class="group-badge">${count} halaman</span>
       </div>`;
 
+    let titleShown = false;
     pages.forEach(row => {
+      // Kalau titleOnly, hanya tampilkan 1 kali per buku
+      if (row._titleOnly) {
+        if (titleShown) return;
+        titleShown = true;
+      }
       const highlighted = row._titleOnly
         ? '<em style="color:#a0aec0">🔖 Kata kunci ditemukan pada judul dokumen ini.</em>'
         : highlight(getSnippet(row.text, kw), kw);
