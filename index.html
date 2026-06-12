@@ -422,7 +422,17 @@ const SEMBOYAN_PD3 = [
 ];
 const SHEET_ID  = "1vLwGQ5TAJFm92mhTaXemmoSuhQmU86P5FGO7gf5ymEE";
 const TAB_NAME  = "Sheet1";
-const PRIORITAS = ["PD 19", "pd 19", "PD19"];
+// ── Sistem prioritas bertingkat ──
+// Makin kecil angkanya, makin atas posisinya
+function getPriorityLevel(filename) {
+  const f = filename.toLowerCase();
+  if (f.includes('galeri'))                          return 0; // Galeri semboyan
+  if (f.includes('pd 19') && f.includes('jilid i') && !f.includes('jilid ii') && !f.includes('jilid iii')) return 1; // PD 19 Jilid I
+  if (f.includes('pd 19') && f.includes('jilid ii') && !f.includes('jilid iii')) return 2; // PD 19 Jilid II
+  if (f.includes('pd 19') && f.includes('jilid iii')) return 3; // PD 19 Jilid III
+  if (f.includes('pd 19') || f.includes('pd19'))     return 4; // PD 19 lainnya
+  return 99; // Buku biasa
+}
 
 // ── Palet warna untuk judul buku (otomatis berganti) ──
 const COLORS = [
@@ -443,7 +453,7 @@ let allMatches = [];
 let currentIdx = -1;
 
 function isPriority(filename) {
-  return PRIORITAS.some(p => filename.toLowerCase().includes(p.toLowerCase()));
+  return getPriorityLevel(filename) < 99;
 }
 
 async function loadSheet() {
@@ -629,8 +639,8 @@ function doSearch() {
     return;
   }
 
-  // PD 19 selalu paling atas
-  fileNames.sort((a, b) => (isPriority(a) ? 0 : 1) - (isPriority(b) ? 0 : 1));
+  // Urutkan berdasarkan tingkat prioritas
+  fileNames.sort((a, b) => getPriorityLevel(a) - getPriorityLevel(b));
 
   let totalMatch = 0;
   let colorIdx   = 0;
