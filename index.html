@@ -279,11 +279,34 @@
     display: block;
   }
   .btn-galeri:hover { background: #553c9a; }
+
+  /* ── TOMBOL HOME ── */
+  header { position: relative; }
+
+  .home-btn {
+    position: absolute;
+    top: 14px;
+    left: 16px;
+    background: #2d3748;
+    color: #a0aec0;
+    font-size: 12px;
+    font-weight: 400;
+    padding: 6px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .home-btn:hover { background: #4a5568; color: #fff; }
+
+  @media (max-width: 520px) {
+    header { padding-top: 56px; }
+  }
 </style>
 </head>
 <body>
 
 <header>
+  <a class="home-btn" href="https://catkaujungtimur.github.io/home/">🏠 Home</a>
   <h1>Perpustakaan Dinas</h1>
   <p>Pencarian lintas dokumen — ketik kata kunci, temukan di semua PDF</p>
   <div class="search-wrap">
@@ -774,6 +797,5 @@ document.getElementById('nextBtn').addEventListener('click', () => jumpTo(curren
 
 loadSheet();
 </script>
-<script src="https://catkaujungtimur.github.io/home/home-button.js"></script>
 </body>
 </html>
